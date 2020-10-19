@@ -3,8 +3,6 @@ package com.bakigoal.securitydemo.security.jwt;
 import com.bakigoal.securitydemo.model.Role;
 import com.bakigoal.securitydemo.model.User;
 import io.jsonwebtoken.Claims;
-import io.jsonwebtoken.Jws;
-import io.jsonwebtoken.JwtException;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -57,7 +55,7 @@ public class JwtTokenProvider {
     }
 
     public Optional<Authentication> getAuthentication(String token) {
-        String username = getUsername(token);
+        String username = validateTokenAndGetUsername(token);
         UserDetails user = userDetailsService.loadUserByUsername(username);
         if (!user.isEnabled()) {
             throw new JwtAuthenticationException("User with username " + username + " is not active");
@@ -65,17 +63,9 @@ public class JwtTokenProvider {
         return Optional.of(new UsernamePasswordAuthenticationToken(user, "", user.getAuthorities()));
     }
 
-    public String getUsername(String token) {
-        return Jwts.parser().setSigningKey(secret).parseClaimsJws(token).getBody().getSubject();
-    }
-
-    public boolean validateToken(String token) {
-        try {
-            Jws<Claims> claims = Jwts.parser().setSigningKey(secret).parseClaimsJws(token);
-            return !claims.getBody().getExpiration().before(new Date());
-        } catch (JwtException | IllegalArgumentException e) {
-            throw new JwtAuthenticationException("JWT token is invalid");
-        }
+    private String validateTokenAndGetUsername(String token) {
+        return Jwts.parser().setSigningKey(secret).parseClaimsJws(token) // validating token
+                .getBody().getSubject();
     }
 
     private List<String> getRoleNames(List<Role> roles) {
