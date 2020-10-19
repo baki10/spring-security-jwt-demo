@@ -29,21 +29,21 @@ public class UserServiceImpl implements UserService {
         user.setRoles(Collections.singletonList(roleRepository.findByName("ROLE_USER")));
         user.setStatus(EntityStatus.ACTIVE);
 
-        User registeredUser = userRepository.save(user);
+        var registeredUser = userRepository.save(user);
         log.info("Registered user {} successfully", registeredUser);
         return registeredUser;
     }
 
     @Override
     public List<User> getAll() {
-        List<User> all = userRepository.findAll();
+        var all = userRepository.findAll();
         log.info("getAll {} found", all.size());
         return all;
     }
 
     @Override
     public Optional<User> findById(Long id) {
-        Optional<User> user = userRepository.findById(id);
+        var user = userRepository.findById(id);
 
         if (user.isEmpty()) {
             log.warn("findById: No user found by id {}", id);
@@ -55,7 +55,7 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public Optional<User> findByUsername(String username) {
-        Optional<User> user = userRepository.findByUsername(username);
+        var user = userRepository.findByUsername(username);
         log.info("findByUsername {} found by username {}", user.orElse(null), username);
         return user;
     }

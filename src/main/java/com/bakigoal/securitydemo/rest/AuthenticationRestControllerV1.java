@@ -1,7 +1,6 @@
 package com.bakigoal.securitydemo.rest;
 
 import com.bakigoal.securitydemo.dto.AuthenticationRequestDto;
-import com.bakigoal.securitydemo.model.User;
 import com.bakigoal.securitydemo.security.jwt.JwtTokenProvider;
 import com.bakigoal.securitydemo.service.UserService;
 import org.springframework.http.ResponseEntity;
@@ -32,12 +31,12 @@ public class AuthenticationRestControllerV1 {
 
     @PostMapping("login")
     public ResponseEntity<?> login(@RequestBody AuthenticationRequestDto requestDto) {
-        String username = requestDto.getUsername();
+        var username = requestDto.getUsername();
         authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(username, requestDto.getPassword()));
-        User user = userService.findByUsername(username)
+        var user = userService.findByUsername(username)
                 .orElseThrow(() -> new UsernameNotFoundException("User with username: " + username + " not found"));
 
-        String token = jwtTokenProvider.createToken(user);
+        var token = jwtTokenProvider.createToken(user);
         return ResponseEntity.ok(Map.of("username", username, "token", token));
     }
 }

@@ -31,7 +31,7 @@ public class JwtTokenFilter extends OncePerRequestFilter {
     }
 
     private Optional<String> resolveToken(HttpServletRequest request) {
-        String authHeader = request.getHeader(AUTHORIZATION_HEADER);
+        var authHeader = request.getHeader(AUTHORIZATION_HEADER);
         if (authHeader != null && authHeader.startsWith(BEARER_TOKEN_PREFIX)) {
             return Optional.of(authHeader.substring(BEARER_TOKEN_PREFIX.length()));
         }

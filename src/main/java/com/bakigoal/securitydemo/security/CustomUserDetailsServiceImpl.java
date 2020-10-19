@@ -1,6 +1,5 @@
 package com.bakigoal.securitydemo.security;
 
-import com.bakigoal.securitydemo.model.User;
 import com.bakigoal.securitydemo.service.UserService;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -20,11 +19,11 @@ public class CustomUserDetailsServiceImpl implements UserDetailsService {
 
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-        User user = userService.findByUsername(username)
+        var user = userService.findByUsername(username)
                 .orElseThrow(() -> new UsernameNotFoundException("User with username: " + username + " not found"));
 
-        AuthorizedUser jwtUser = AuthorizedUser.from(user);
+        var authorizedUser = AuthorizedUser.from(user);
         log.info("loadUserByUsername {} loaded", username);
-        return jwtUser;
+        return authorizedUser;
     }
 }
