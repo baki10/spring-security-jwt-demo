@@ -11,7 +11,7 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
 @Service
-@Qualifier("JwtUserDetailsService")
+@Qualifier("CustomUserDetailsService")
 @Slf4j
 @AllArgsConstructor
 public class CustomUserDetailsServiceImpl implements UserDetailsService {
