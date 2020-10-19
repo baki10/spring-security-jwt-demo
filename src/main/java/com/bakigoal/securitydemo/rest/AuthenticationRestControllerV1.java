@@ -13,7 +13,6 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import java.util.HashMap;
 import java.util.Map;
 
 @RestController
@@ -38,9 +37,7 @@ public class AuthenticationRestControllerV1 {
         User user = userService.findByUsername(username)
                 .orElseThrow(() -> new UsernameNotFoundException("User with username: " + username + " not found"));
 
-        Map<Object, Object> response = new HashMap<>();
-        response.put("username", username);
-        response.put("token", jwtTokenProvider.createToken(user));
-        return ResponseEntity.ok(response);
+        String token = jwtTokenProvider.createToken(user);
+        return ResponseEntity.ok(Map.of("username", username, "token", token));
     }
 }
