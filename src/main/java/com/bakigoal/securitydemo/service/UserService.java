@@ -3,6 +3,7 @@ package com.bakigoal.securitydemo.service;
 import com.bakigoal.securitydemo.model.User;
 
 import java.util.List;
+import java.util.Optional;
 
 public interface UserService {
 
@@ -10,9 +11,9 @@ public interface UserService {
 
     List<User> getAll();
 
-    User findById(Long id);
+    Optional<User> findById(Long id);
 
-    User findByUsername(String username);
+    Optional<User> findByUsername(String username);
 
     void delete(Long id);
 }

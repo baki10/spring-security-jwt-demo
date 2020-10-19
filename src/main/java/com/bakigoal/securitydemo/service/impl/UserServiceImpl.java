@@ -12,6 +12,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.Collections;
 import java.util.List;
+import java.util.Optional;
 
 @Service
 @Slf4j
@@ -41,10 +42,10 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public User findById(Long id) {
-        User user = userRepository.findById(id).orElse(null);
+    public Optional<User> findById(Long id) {
+        Optional<User> user = userRepository.findById(id);
 
-        if (user == null) {
+        if (user.isEmpty()) {
             log.warn("findById: No user found by id {}", id);
         } else {
             log.info("findById {} found by id {}", user, id);
@@ -53,9 +54,9 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public User findByUsername(String username) {
-        User user = userRepository.findByUsername(username);
-        log.info("findByUsername {} found by username {}", user, username);
+    public Optional<User> findByUsername(String username) {
+        Optional<User> user = userRepository.findByUsername(username);
+        log.info("findByUsername {} found by username {}", user.orElse(null), username);
         return user;
     }
 
