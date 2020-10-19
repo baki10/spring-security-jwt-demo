@@ -16,17 +16,14 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.stereotype.Component;
 
 import javax.annotation.PostConstruct;
-import javax.servlet.http.HttpServletRequest;
 import java.util.Base64;
 import java.util.Date;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Component
 public class JwtTokenProvider {
-
-    public static final String AUTHORIZATION_HEADER = "Authorization";
-    public static final String BEARER_TOKEN_PREFIX = "Bearer ";
 
     @Value("${jwt.token.secret}")
     private String secret;
@@ -59,32 +56,24 @@ public class JwtTokenProvider {
                 .compact();
     }
 
-    public Authentication getAuthentication(String token) {
+    public Optional<Authentication> getAuthentication(String token) {
         String username = getUsername(token);
-        UserDetails userDetails = userDetailsService.loadUserByUsername(username);
-        if (!userDetails.isEnabled()) {
+        UserDetails user = userDetailsService.loadUserByUsername(username);
+        if (!user.isEnabled()) {
             throw new JwtAuthenticationException("User with username " + username + " is not active");
         }
-        return new UsernamePasswordAuthenticationToken(userDetails, "", userDetails.getAuthorities());
+        return Optional.of(new UsernamePasswordAuthenticationToken(user, "", user.getAuthorities()));
     }
 
     public String getUsername(String token) {
         return Jwts.parser().setSigningKey(secret).parseClaimsJws(token).getBody().getSubject();
     }
 
-    public String resolveToken(HttpServletRequest request) {
-        String authHeader = request.getHeader(AUTHORIZATION_HEADER);
-        if (authHeader != null && authHeader.startsWith(BEARER_TOKEN_PREFIX)) {
-            return authHeader.substring(BEARER_TOKEN_PREFIX.length());
-        }
-        return null;
-    }
-
     public boolean validateToken(String token) {
         try {
             Jws<Claims> claims = Jwts.parser().setSigningKey(secret).parseClaimsJws(token);
             return !claims.getBody().getExpiration().before(new Date());
-        } catch (JwtException e) {
+        } catch (JwtException | IllegalArgumentException e) {
             throw new JwtAuthenticationException("JWT token is invalid");
         }
     }

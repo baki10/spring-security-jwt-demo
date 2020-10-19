@@ -1,17 +1,19 @@
 package com.bakigoal.securitydemo.security.jwt;
 
-import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.web.filter.GenericFilterBean;
+import org.springframework.web.filter.OncePerRequestFilter;
 
 import javax.servlet.FilterChain;
 import javax.servlet.ServletException;
-import javax.servlet.ServletRequest;
-import javax.servlet.ServletResponse;
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.util.Optional;
 
-public class JwtTokenFilter extends GenericFilterBean {
+public class JwtTokenFilter extends OncePerRequestFilter {
+
+    public static final String AUTHORIZATION_HEADER = "Authorization";
+    public static final String BEARER_TOKEN_PREFIX = "Bearer ";
 
     private final JwtTokenProvider jwtTokenProvider;
 
@@ -20,14 +22,22 @@ public class JwtTokenFilter extends GenericFilterBean {
     }
 
     @Override
-    public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain) throws IOException, ServletException {
-        String token = jwtTokenProvider.resolveToken((HttpServletRequest) request);
-        if(token != null && jwtTokenProvider.validateToken(token)) {
-            Authentication authentication = jwtTokenProvider.getAuthentication(token);
-            if(authentication != null) {
-                SecurityContextHolder.getContext().setAuthentication(authentication);
+    protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
+        resolveToken(request).ifPresent(token -> {
+            if (jwtTokenProvider.validateToken(token)) {
+                jwtTokenProvider.getAuthentication(token).ifPresent(auth ->
+                        SecurityContextHolder.getContext().setAuthentication(auth));
             }
+        });
+
+        filterChain.doFilter(request, response);
+    }
+
+    private Optional<String> resolveToken(HttpServletRequest request) {
+        String authHeader = request.getHeader(AUTHORIZATION_HEADER);
+        if (authHeader != null && authHeader.startsWith(BEARER_TOKEN_PREFIX)) {
+            return Optional.of(authHeader.substring(BEARER_TOKEN_PREFIX.length()));
         }
-        chain.doFilter(request, response);
+        return Optional.empty();
     }
 }
