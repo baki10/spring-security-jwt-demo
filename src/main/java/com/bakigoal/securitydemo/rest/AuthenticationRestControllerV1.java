@@ -3,6 +3,7 @@ package com.bakigoal.securitydemo.rest;
 import com.bakigoal.securitydemo.dto.AuthenticationRequestDto;
 import com.bakigoal.securitydemo.security.jwt.JwtTokenProvider;
 import com.bakigoal.securitydemo.service.UserService;
+import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -16,18 +17,12 @@ import java.util.Map;
 
 @RestController
 @RequestMapping(value = "/api/v1/auth/")
+@RequiredArgsConstructor
 public class AuthenticationRestControllerV1 {
 
     private final AuthenticationManager authenticationManager;
     private final JwtTokenProvider jwtTokenProvider;
     private final UserService userService;
-
-    public AuthenticationRestControllerV1(AuthenticationManager authenticationManager,
-                                          JwtTokenProvider jwtTokenProvider, UserService userService) {
-        this.authenticationManager = authenticationManager;
-        this.jwtTokenProvider = jwtTokenProvider;
-        this.userService = userService;
-    }
 
     @PostMapping("login")
     public ResponseEntity<?> login(@RequestBody AuthenticationRequestDto requestDto) {

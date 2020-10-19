@@ -1,6 +1,7 @@
 package com.bakigoal.securitydemo.model;
 
-import lombok.Data;
+import lombok.Getter;
+import lombok.Setter;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -11,7 +12,8 @@ import java.util.List;
 
 @Entity
 @Table(name = "roles")
-@Data
+@Getter
+@Setter
 public class Role extends BaseEntity {
 
     @Column(name = "name")

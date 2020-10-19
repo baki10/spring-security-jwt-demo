@@ -3,6 +3,7 @@ package com.bakigoal.securitydemo.config;
 import com.bakigoal.securitydemo.exception.handler.FilterChainExceptionHandler;
 import com.bakigoal.securitydemo.security.jwt.JwtTokenFilter;
 import com.bakigoal.securitydemo.security.jwt.JwtTokenProvider;
+import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -15,18 +16,14 @@ import org.springframework.security.web.authentication.logout.LogoutFilter;
 
 @Configuration
 @EnableWebSecurity
+@RequiredArgsConstructor
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
-
-    private final JwtTokenProvider jwtTokenProvider;
-    private final FilterChainExceptionHandler filterChainExceptionHandler;
 
     private static final String ADMIN_ENDPOINT = "/api/v1/admin/**";
     private static final String LOGIN_ENDPOINT = "/api/v1/auth/login";
 
-    public SecurityConfig(JwtTokenProvider jwtTokenProvider, FilterChainExceptionHandler filterChainExceptionHandler) {
-        this.jwtTokenProvider = jwtTokenProvider;
-        this.filterChainExceptionHandler = filterChainExceptionHandler;
-    }
+    private final JwtTokenProvider jwtTokenProvider;
+    private final FilterChainExceptionHandler filterChainExceptionHandler;
 
     @Override
     @Bean

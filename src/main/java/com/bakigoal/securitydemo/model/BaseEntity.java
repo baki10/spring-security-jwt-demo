@@ -1,6 +1,7 @@
 package com.bakigoal.securitydemo.model;
 
-import lombok.Data;
+import lombok.Getter;
+import lombok.Setter;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedDate;
 
@@ -13,7 +14,8 @@ import javax.persistence.Id;
 import javax.persistence.MappedSuperclass;
 import java.util.Date;
 
-@Data
+@Getter
+@Setter
 @MappedSuperclass
 public class BaseEntity {
 

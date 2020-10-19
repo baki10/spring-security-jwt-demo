@@ -5,7 +5,7 @@ import com.bakigoal.securitydemo.model.User;
 import com.bakigoal.securitydemo.repository.RoleRepository;
 import com.bakigoal.securitydemo.repository.UserRepository;
 import com.bakigoal.securitydemo.service.UserService;
-import lombok.AllArgsConstructor;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -16,7 +16,7 @@ import java.util.Optional;
 
 @Service
 @Slf4j
-@AllArgsConstructor
+@RequiredArgsConstructor
 public class UserServiceImpl implements UserService {
 
     private final UserRepository userRepository;

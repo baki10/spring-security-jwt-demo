@@ -3,7 +3,7 @@ package com.bakigoal.securitydemo.rest;
 import com.bakigoal.securitydemo.dto.UserDto;
 import com.bakigoal.securitydemo.security.Auth;
 import com.bakigoal.securitydemo.service.UserService;
-import lombok.AllArgsConstructor;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -14,7 +14,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @RequestMapping("/api/v1/users")
-@AllArgsConstructor
+@RequiredArgsConstructor
 @Slf4j
 public class UserControllerV1 {
 

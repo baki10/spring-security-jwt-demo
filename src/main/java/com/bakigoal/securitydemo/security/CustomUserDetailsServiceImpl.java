@@ -1,7 +1,7 @@
 package com.bakigoal.securitydemo.security;
 
 import com.bakigoal.securitydemo.service.UserService;
-import lombok.AllArgsConstructor;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -12,7 +12,7 @@ import org.springframework.stereotype.Service;
 @Service
 @Qualifier("CustomUserDetailsService")
 @Slf4j
-@AllArgsConstructor
+@RequiredArgsConstructor
 public class CustomUserDetailsServiceImpl implements UserDetailsService {
 
     private final UserService userService;
