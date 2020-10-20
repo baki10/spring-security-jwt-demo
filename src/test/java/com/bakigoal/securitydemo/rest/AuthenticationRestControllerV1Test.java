@@ -17,12 +17,13 @@ import org.springframework.test.web.servlet.MockMvc;
 import java.nio.charset.StandardCharsets;
 import java.util.Optional;
 
-import static org.hamcrest.core.StringContains.containsString;
+import static org.hamcrest.Matchers.is;
+import static org.hamcrest.Matchers.stringContainsInOrder;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @WebMvcTest
@@ -55,8 +56,8 @@ public class AuthenticationRestControllerV1Test {
                         .contentType(MediaType.APPLICATION_JSON))
                 .andDo(print())
                 .andExpect(status().isOk())
-                .andExpect(content().string(containsString("\"username\":\"" + username + "\"")))
-                .andExpect(content().string(containsString("\"token\":\"" + token + "\"")));
+                .andExpect(jsonPath("$.username", is(username)))
+                .andExpect(jsonPath("$.token", is(token)));
     }
 
     @Test
@@ -74,7 +75,8 @@ public class AuthenticationRestControllerV1Test {
                         .contentType(MediaType.APPLICATION_JSON))
                 .andDo(print())
                 .andExpect(status().isForbidden())
-                .andExpect(content().string(containsString("\"exception\":\"UsernameNotFoundException\"")));
+                .andExpect(jsonPath("$.exception", is("UsernameNotFoundException")))
+                .andExpect(jsonPath("$.message", stringContainsInOrder(username, "not found")));
     }
 
     private Authentication authenticationStub() {
